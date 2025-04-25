@@ -18,3 +18,8 @@ Dự án này nhằm mục đích xây dựng một hệ thống có khả năng
 
 ## Giới thiệu mô hình học sâu
 Dự án sử dụng các mô hình học sâu (InceptionV3, VGG16, ResNet50) để phân loại và tìm kiếm hình ảnh. Các mô hình này đã được huấn luyện trên bộ dữ liệu hình ảnh lớn và được tối ưu hóa để hoạt động hiệu quả trong việc phân loại và tìm kiếm hình ảnh.
+## Tải Mô Hình
+Bạn có thể tải mô hình đã huấn luyện từ Google Drive bằng cách nhấp vào liên kết dưới đây:
+- [Tải mô hình InceptionV3](https://drive.google.com/file/d/1PmkEcH8cuZu1f9JfG9JXRrHCOLKEi2nu/view?usp=drive_link)
+- [Tải mô hình VGG16](https://drive.google.com/file/d/1--Z470IXfFd2qTillqGOjk50QYgNqMjT/view?usp=drive_link)
+- [Tải mô hình ResNet50](https://drive.google.com/file/d/11XjvKPgj_JaWxslU9NHkB6KRcDW8Ay6z/view?usp=drive_link)
