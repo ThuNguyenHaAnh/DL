@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống trích xuất ảnh</title>
+</head>
+<body>
+    <h1>Hệ thống trích xuất ảnh</h1>
+    
+    <hr>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" >
+        <input type="submit" value="Phân loại ảnh">
+    </form>
+
+    {% if image %}
+        <h2>Kết quả:</h2>
+        <img src="{{ url_for('get_image', filename=image) }}" height="200">
+        <p><strong>Dự đoán:</strong> {{ result }}</p>
+        <p><strong>Xác suất:</strong> {{ "%.2f"|format(confidence * 100) }}%</p>
+    {% endif %}
+    <h3>Ảnh tương đồng (>90%)</h3>
+    {% if similar_images %}
+        <table border="1">
+            <tr>
+                <th>STT</th>
+                <th>Ảnh</th>
+                <th>Tên file</th>
+                <th>Độ tương đồng (%)</th>
+            </tr>
+            {% for img in similar_images %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <img src="{{ url_for('get_similar_image', filename=img.path.replace("\\", "/").split('data/', 1)[-1]) }}" 
+                            alt="{{ img.name }}" width="100">
+                    </td>
+                    <td>{{ img.name }}</td>
+                    <td>{{ (img.similar[0][0] * 100) | round(2) }}%</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Không có ảnh nào có độ tương đồng trên 90%.</p>
+    {% endif %}
+
+</body>
+</html>

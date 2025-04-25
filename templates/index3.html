@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống phân loại ảnh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        input[type="file"], select, input[type="submit"] {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1c5980;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            border-radius: 4px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+</head>
+<body>
+    <h1>Hệ thống phân loại ảnh</h1>
+    
+    <hr>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" >
+
+        <br><br>
+
+        <label for="model">Chọn mô hình:</label>
+        <select name="model" required>
+            <option value="InceptionV3">InceptionV3</option>
+            <option value="VGG16">VGG16</option>
+            <option value="ResNet50">ResNet50</option>
+        </select>
+
+        <br><br>
+
+        <label for="threshold">Chọn ngưỡng tương đồng:</label>
+        <select name="threshold" required>
+            <option value="0.9">90%</option>
+            <option value="0.8">80%</option>
+            <option value="0.7">70%</option>
+            <option value="0.6">60%</option>
+            <option value="0.5">50%</option>
+            <option value="0.4">40%</option>
+            <option value="0.3">30%</option>
+            <option value="0.2">20%</option>
+            <option value="0.1">10%</option>
+        </select>
+
+        <br><br>
+        <input type="submit" value="Phân loại ảnh">
+    </form>
+
+    {% if image %}
+        <h2>Kết quả mô hình {{model}} :</h2>
+        <img src="{{ url_for('get_image', filename=image) }}" height="200">
+        <p><strong>Dự đoán:</strong> {{ result }}</p>
+        <p><strong>Xác suất:</strong> {{ "%.2f"|format(confidence * 100) }}%</p>
+    {% endif %}
+    <h3>Ảnh tương đồng (>{{ (threshold | float * 100) | round(0) }})</h3>
+    {% if similar_images %}
+        <table border="1">
+            <tr>
+                <th>STT</th>
+                <th>Ảnh</th>
+                <th>Tên file</th>
+                <th>Độ tương đồng (%)</th>
+            </tr>
+            {% for img in similar_images %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <img src="{{ url_for('get_similar_image', filename=img.path.replace("\\", "/").split('data/', 1)[-1]) }}" 
+                            alt="{{ img.name }}" width="100">
+                    </td>
+                    <td>{{ img.name }}</td>
+                    <td>{{ (img.similar[0][0] * 100) | round(2) }}%</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Không có ảnh nào có độ tương đồng trên {{ (threshold | float * 100) | round(0) }}%.</p>
+    {% endif %}
+
+</body>
+</html>
